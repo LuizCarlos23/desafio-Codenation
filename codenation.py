@@ -3,11 +3,16 @@ from json import dumps, loads
 from hashlib import sha1
 
 alphabetBase = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+symbols = ['.', '?', '!', '@', '#', '$', '%', '*', '&', '+', '-', '/', '=']
 token = ""
 urlGet = "https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token="+token
 urlPost = "https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token="+token
 
 #--------------------Functions---------------------
+
+def createFile(dataJson)
+	with open("answer.json", "w") as file:
+		file.write(dumps(dataJson))
 
 # Function to generate the encrypted alphabet
 def generateEncryptedAlphabet(position):
@@ -24,7 +29,7 @@ def decipherString(position, msg):
 	for letter in msg:
 		if (letter.isnumeric()):
 			decipheredString += letter
-		elif (letter == '.'):
+		elif (letter in symbols):
 			decipheredString += letter
 		elif (letter in alphabetBase):
 			decipheredString += alphabetBase[newAlphabet.index(letter)]
@@ -39,22 +44,20 @@ def makeSha1(string, encoding="utf-8"):
 
 response_api = get(urlGet)
 dataJson = loads(response_api.text)
-# Fule created with api data
-with open("answer.json", "w") as file:
-	file.write(dumps(dataJson))
 
-encryptedString = dataJson["cifrado"]
+# File created with api data
+createFile(dataJson)
+
+encryptedString = dataJson["cifrado"].lower()
 position = dataJson["numero_casas"]
+
 decipheredString = decipherString(25-position, encryptedString)
-#decipheredString = decipherString(24, encryptedString)
 cryptographicSummary = makeSha1(decipheredString)
 
+# Updated with new data
 dataJson["decifrado"] = decipheredString
 dataJson["resumo_criptografico"] = cryptographicSummary
-
-# Updated with new data
-with open("answer.json", "w") as file:
-	file.write(dumps(dataJson))
+createFile(dataJson)
 
 fileJson = {"answer": open("answer.json", "rb")}	
 result = post(urlPost, files=fileJson)
