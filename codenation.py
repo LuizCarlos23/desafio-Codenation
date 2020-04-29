@@ -3,7 +3,7 @@ from json import dumps, loads
 from hashlib import sha1
 
 alphabetBase = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-token = "7da8c6c71e3fa26b6854b51bab52f1baabecf97d"
+token = ""
 urlGet = "https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token="+token
 urlPost = "https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token="+token
 
